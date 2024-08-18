@@ -30,6 +30,7 @@ function conexion($db_config){
     }
 }
 
+date_default_timezone_set('America/Asuncion');
 // llamar a la conexión y activar las variables $_SESSION
 $conn = conexion($db_config);
 session_start();
