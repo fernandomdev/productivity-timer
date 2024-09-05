@@ -1,6 +1,6 @@
 # Contador de Tiempo de Productividad
 
-Sistema hecho en 1 hora para mi localhost para controlar las horas que le dedico a la programación.
+Sistema hecho en para uso personal para controlar las horas que le dedico a la programación.
 
 ## Código SQL
 

@@ -10,31 +10,32 @@ var hours = 0;
 var minutes = 0;
 var seconds = 0;
 
-$(document).on('keypress', function (e) {
-    if (e.code == "Space") {
-        if (clicked) {
-            e.preventDefault();
-            return false;
-        }
+$(document).on('click', '.main_trigger', function (e) {
+    if (clicked) {
+        e.preventDefault();
+        return false;
+    }
 
-        if (!initialised) {
-            initialised = true;
+    if (!initialised) {
+        initialised = true;
+        isPaused = false;
+        $(".primary i").removeClass("fa-pause");
+        $(".primary i").removeClass("fa-play");
+        $(".primary i").addClass("fa-pause");
+        $(".stopwatch").addClass("active");
+        initialiseTimer();
+    } else {
+        $(".primary i").removeClass("fa-pause");
+        $(".primary i").removeClass("fa-play");
+        if (isPaused) {
             isPaused = false;
-            $(".stopwatch i").removeClass("fa-play");
-            $(".stopwatch i").removeClass("fa-pause");
-            $(".stopwatch i").addClass("fa-play");
-            initialiseTimer();
+            $(".primary i").addClass("fa-pause");
+            $(".stopwatch").addClass("active");
         } else {
-            $(".stopwatch i").removeClass("fa-play");
-            $(".stopwatch i").removeClass("fa-pause");
-            if (isPaused) {
-                isPaused = false;
-                $(".stopwatch i").addClass("fa-play");
-            } else {
-                isPaused = true;
-                $(".stopwatch i").addClass("fa-pause");
-                $(document).prop('title', `En pausa`);
-            }
+            isPaused = true;
+            $(".stopwatch").removeClass("active");
+            $(".primary i").addClass("fa-play");
+            $(document).prop('title', `En pausa`);
         }
     }
 });
@@ -79,35 +80,35 @@ function reset() {
     $(".hours").text("00");
     $(".minutes").text("00");
     $(".seconds").text("00");
-    $(".stopwatch i").removeClass("fa-pause");
-    $(".stopwatch i").removeClass("fa-play");
+    $(".primary i").removeClass("fa-pause");
+    $(".primary i").removeClass("fa-play");
+    $(".primary i").addClass("fa-play");
+    $(".stopwatch").removeClass("active");
 }
 
 // subir tiempo
-$(document).on('keypress', function (e) {
-    if (e.code == "Enter") {
-        if (confirm("¿Está seguro de que desea subir su tiempo?") == true) {
-            let horas = hours < 10 ? ("0" + hours.toString()) : hours.toString();
-            let minutos = minutes < 10 ? ("0" + minutes.toString()) : minutes.toString();
-            let segundos = seconds < 10 ? ("0" + seconds.toString()) : seconds.toString();
-            $.ajax({
-                type: "POST",
-                url: "control.php",
-                data: {
-                    action: 'savetime',
-                    time: `${horas}:${minutos}:${segundos}`
-                },
-                async: false,
-                error: function(xhr, status, error) {
-                    alert(xhr.responseText);
-                },
-                dataType: 'text',
-                success: function(response){
-                    // reset();
-                    alert(response);
-                    location.reload();
-                }
-            });
-        }
+$(document).on('click', '.send_trigger', function (e) {
+    if (confirm("¿Está seguro de que desea subir su tiempo?") == true) {
+        let horas = hours < 10 ? ("0" + hours.toString()) : hours.toString();
+        let minutos = minutes < 10 ? ("0" + minutes.toString()) : minutes.toString();
+        let segundos = seconds < 10 ? ("0" + seconds.toString()) : seconds.toString();
+        $.ajax({
+            type: "POST",
+            url: "control.php",
+            data: {
+                action: 'savetime',
+                time: `${horas}:${minutos}:${segundos}`
+            },
+            async: false,
+            error: function(xhr, status, error) {
+                alert(xhr.responseText);
+            },
+            dataType: 'text',
+            success: function(response){
+                // reset();
+                alert(response);
+                location.reload();
+            }
+        });
     }
 });
